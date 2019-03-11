@@ -1,0 +1,55 @@
+{
+  "name": "konfig-manager",
+  "description": "Kong API Gateway Config Manager",
+  "version": "1.0.0",
+  "author": "Luan Pablo Fabiano",
+  "bin": {
+    "konfig": "./bin/run"
+  },
+  "bugs": "https://github.com/LuanP/konfig-manager/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "axios": "^0.18.0",
+    "ramda": "^0.26.1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "chai": "^4",
+    "globby": "^8",
+    "mocha": "^5",
+    "nyc": "^13",
+    "standard": "^12.0.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/LuanP/konfig-manager",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "konfig",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "LuanP/konfig-manager",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}

@@ -28,26 +28,27 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`konfig hello`](#konfig-hello)
+* [`konfig dump`](#konfig-dump)
 * [`konfig help [COMMAND]`](#konfig-help-command)
+* [`konfig load`](#konfig-load)
 
-## `konfig hello`
+## `konfig dump`
 
-Describe the command here
+Dump available Kong data in a file
 
 ```
 USAGE
-  $ konfig hello
+  $ konfig dump
 
 OPTIONS
-  -n, --name=name  name to print
+  --file=file  [default: konfig.json] name of file to be created as output
+  --url=url    [default: http://localhost:8001] URL of the Kong Admin API
 
 DESCRIPTION
-  ...
-  Extra documentation goes here
+  It requests data from Kong API endpoints and save the results in a file.
 ```
 
-_See code: [src/commands/hello.js](https://github.com/LuanP/konfig-manager/blob/v1.0.0/src/commands/hello.js)_
+_See code: [src/commands/dump.js](https://github.com/LuanP/konfig-manager/blob/v1.0.0/src/commands/dump.js)_
 
 ## `konfig help [COMMAND]`
 
@@ -65,4 +66,22 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
+
+## `konfig load`
+
+Load available Kong data from a file
+
+```
+USAGE
+  $ konfig load
+
+OPTIONS
+  --file=file  [default: konfig.json] name of file to be loaded
+  --url=url    [default: http://localhost:8001] URL of the Kong Admin API
+
+DESCRIPTION
+  It gets data from a file and loads in Kong Admin API endpoints.
+```
+
+_See code: [src/commands/load.js](https://github.com/LuanP/konfig-manager/blob/v1.0.0/src/commands/load.js)_
 <!-- commandsstop -->

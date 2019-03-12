@@ -63,7 +63,7 @@ class LoadCommand extends Command {
       }
     }
 
-    return R.map(fn, data)
+    return Promise.all(R.map(fn, data))
   }
 }
 

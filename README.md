@@ -29,6 +29,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`konfig dump`](#konfig-dump)
+* [`konfig flush`](#konfig-flush)
 * [`konfig help [COMMAND]`](#konfig-help-command)
 * [`konfig load`](#konfig-load)
 
@@ -49,6 +50,24 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/dump.js](https://github.com/LuanP/konfig-manager/blob/v1.0.1/src/commands/dump.js)_
+
+## `konfig flush`
+
+Describe the command here
+
+```
+USAGE
+  $ konfig flush
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/flush.js](https://github.com/LuanP/konfig-manager/blob/v1.0.1/src/commands/flush.js)_
 
 ## `konfig help [COMMAND]`
 

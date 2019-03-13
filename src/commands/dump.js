@@ -5,19 +5,13 @@ const axios = require('axios')
 
 const { Command, flags } = require('@oclif/command')
 
+const { getAllData } = require('../utils/get-data')
+
 class DumpCommand extends Command {
   async run () {
     const { flags } = this.parse(DumpCommand)
 
-    const outputData = {}
-
-    outputData.plugins = await this.getData(flags.url, 'plugins')
-    outputData.consumers = await this.getData(flags.url, 'consumers')
-    outputData.services = await this.getData(flags.url, 'services')
-    outputData.routes = await this.getData(flags.url, 'routes')
-    outputData.upstreams = await this.getData(flags.url, 'upstreams')
-    outputData.certificates = await this.getData(flags.url, 'certificates')
-    outputData.snis = await this.getData(flags.url, 'snis')
+    const outputData = await getAllData(flags.url)
 
     const file = fs.createWriteStream(flags.file)
     file.write(

@@ -19,7 +19,7 @@ $ npm install -g konfig-manager
 $ konfig COMMAND
 running command...
 $ konfig (-v|--version|version)
-konfig-manager/1.0.1 darwin-x64 node-v10.15.3
+konfig-manager/1.1.0 darwin-x64 node-v10.15.3
 $ konfig --help [COMMAND]
 USAGE
   $ konfig COMMAND
@@ -49,25 +49,24 @@ DESCRIPTION
   It requests data from Kong API endpoints and save the results in a file.
 ```
 
-_See code: [src/commands/dump.js](https://github.com/LuanP/konfig-manager/blob/v1.0.1/src/commands/dump.js)_
+_See code: [src/commands/dump.js](https://github.com/LuanP/konfig-manager/blob/v1.1.0/src/commands/dump.js)_
 
 ## `konfig flush`
 
-Describe the command here
+Flush available Kong data
 
 ```
 USAGE
   $ konfig flush
 
 OPTIONS
-  -n, --name=name  name to print
+  --url=url  [default: http://localhost:8001] URL of the Kong Admin API
 
 DESCRIPTION
-  ...
-  Extra documentation goes here
+  It requests the endpoints getting the available data and calls the DELETE endpoints.
 ```
 
-_See code: [src/commands/flush.js](https://github.com/LuanP/konfig-manager/blob/v1.0.1/src/commands/flush.js)_
+_See code: [src/commands/flush.js](https://github.com/LuanP/konfig-manager/blob/v1.1.0/src/commands/flush.js)_
 
 ## `konfig help [COMMAND]`
 
@@ -102,5 +101,5 @@ DESCRIPTION
   It gets data from a file and loads in Kong Admin API endpoints.
 ```
 
-_See code: [src/commands/load.js](https://github.com/LuanP/konfig-manager/blob/v1.0.1/src/commands/load.js)_
+_See code: [src/commands/load.js](https://github.com/LuanP/konfig-manager/blob/v1.1.0/src/commands/load.js)_
 <!-- commandsstop -->

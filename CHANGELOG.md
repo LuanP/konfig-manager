@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - axios version
+- dump command checks for consumer jwts if a jwt plugin and consumer exists
+- load command considers the consumerJWTs in the konfig.json
 
 ## [1.1.0] - 2019-03-13
 ### Added

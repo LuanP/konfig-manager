@@ -17,6 +17,10 @@ class LoadCommand extends Command {
     await this.loadCertificates(flags.url, data.certificates)
     await this.loadSnis(flags.url, data.snis)
 
+    if (data.consumersJWTs) {
+      await this.loadConsumersJWTs(flags.url, data.consumersJWTs)
+    }
+
     this.log('All loaded. You\'re ready to go!')
   }
 
@@ -42,6 +46,15 @@ class LoadCommand extends Command {
 
   async loadSnis (url, snis) {
     return this.loadDefault(url, snis, 'snis')
+  }
+
+  async loadConsumersJWTs (url, consumersJWTs) {
+    return Promise.all(
+      R.map(
+        (consumerJWT) => this.loadDefault(url, [consumerJWT], `consumers/${consumerJWT.consumer.id}/jwt`),
+        consumersJWTs
+      )
+    )
   }
 
   async loadDefault (url, data, resource) {

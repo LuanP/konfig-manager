@@ -7,6 +7,7 @@ Kong API Gateway Config Manager
 [![Version](https://img.shields.io/npm/v/konfig-manager.svg)](https://npmjs.org/package/konfig-manager)
 [![Downloads/week](https://img.shields.io/npm/dw/konfig-manager.svg)](https://npmjs.org/package/konfig-manager)
 [![License](https://img.shields.io/npm/l/konfig-manager.svg)](https://github.com/LuanP/konfig-manager/blob/master/package.json)
+[![Known Vulnerabilities](https://snyk.io/test/npm/konfig-manager/badge.svg)](https://snyk.io/test/npm/konfig-manager)
 
 <!-- toc -->
 * [Usage](#usage)

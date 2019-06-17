@@ -17,14 +17,19 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1",
     "@oclif/test": "^1",
+    "babel-eslint": "^10.0.1",
     "chai": "^4",
     "globby": "^8",
     "mocha": "^5",
+    "nock": "^10.0.6",
     "nyc": "^13",
+    "sinon": "^7.3.2",
+    "snazzy": "^8.0.0",
     "standard": "^12.0.1"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": "10.16.0",
+    "npm": "6.9.0"
   },
   "files": [
     "/bin",
@@ -50,6 +55,22 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",
     "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
+    "lint": "standard --verbose | snazzy",
+    "git-hook": "npm run lint -s && npm run test -s",
+    "precommit": "npm run git-hook",
+    "prepush": "npm run git-hook",
+    "fixcode": "standard --fix",
     "version": "oclif-dev readme && git add README.md"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "describe",
+      "it",
+      "test",
+      "beforeEach",
+      "afterEach",
+      "after"
+    ]
   }
 }

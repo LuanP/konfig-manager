@@ -8,7 +8,7 @@ const { Command, flags } = require('@oclif/command')
 class LoadCommand extends Command {
   async run () {
     const { flags } = this.parse(LoadCommand)
-    const data = JSON.parse(fs.readFileSync(flags.file))
+    const data = JSON.parse(LoadCommand.readConfigFile(flags.file))
 
     await this.loadServices(flags.url, data.services)
     await this.loadRoutes(flags.url, data.routes)
@@ -78,6 +78,10 @@ class LoadCommand extends Command {
 
     return Promise.all(R.map(fn, data))
   }
+}
+
+LoadCommand.readConfigFile = (filepath) => {
+  return fs.readFileSync(filepath)
 }
 
 LoadCommand.description = `Load available Kong data from a file

@@ -19,6 +19,7 @@
     "@oclif/test": "^1",
     "babel-eslint": "^10.0.1",
     "chai": "^4",
+    "coveralls": "^3.0.4",
     "globby": "^8",
     "mocha": "^5",
     "nock": "^10.0.6",
@@ -60,6 +61,7 @@
     "precommit": "npm run git-hook",
     "prepush": "npm run git-hook",
     "fixcode": "standard --fix",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "version": "oclif-dev readme && git add README.md"
   },
   "standard": {

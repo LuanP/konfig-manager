@@ -3,11 +3,15 @@ konfig-manager
 
 Kong API Gateway Config Manager
 
+[![Travis](https://img.shields.io/travis/luanp/konfig-manager.svg)](https://travis-ci.org/LuanP/konfig-manager)
+[![Coverage Status](https://coveralls.io/repos/github/LuanP/konfig-manager/badge.svg?branch=master)](https://coveralls.io/github/LuanP/konfig-manager?branch=master)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/konfig-manager.svg)](https://npmjs.org/package/konfig-manager)
 [![Downloads/week](https://img.shields.io/npm/dw/konfig-manager.svg)](https://npmjs.org/package/konfig-manager)
 [![License](https://img.shields.io/npm/l/konfig-manager.svg)](https://github.com/LuanP/konfig-manager/blob/master/package.json)
 [![Known Vulnerabilities](https://snyk.io/test/npm/konfig-manager/badge.svg)](https://snyk.io/test/npm/konfig-manager)
+[![Sonar Tech Debt](https://img.shields.io/sonar/https/sonarcloud.io/LuanP_konfig-manager/tech_debt.svg)](https://sonarcloud.io/project/issues?id=LuanP_konfig-manager&resolved=false)
+
 
 <!-- toc -->
 * [Usage](#usage)

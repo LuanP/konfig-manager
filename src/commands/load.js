@@ -3,12 +3,16 @@ const fs = require('fs')
 const R = require('ramda')
 const axios = require('axios')
 
-const { Command, flags } = require('@oclif/command')
+const { flags } = require('@oclif/command')
+
+const Command = require('../base')
 
 class LoadCommand extends Command {
   async run () {
     const { flags } = this.parse(LoadCommand)
-    const data = JSON.parse(LoadCommand.readConfigFile(flags.file))
+    const fileUnparsedData = LoadCommand.readConfigFile(flags.file)
+    const updatedUnparsedData = this.applyEnvironmentVariablesSubstitutions(fileUnparsedData, this.cmdConfig)
+    const currentData = JSON.parse(updatedUnparsedData)
 
     await this.loadServices(flags.url, data.services)
     await this.loadRoutes(flags.url, data.routes)
@@ -22,6 +26,23 @@ class LoadCommand extends Command {
     }
 
     this.log('All loaded. You\'re ready to go!')
+  }
+
+  applyEnvironmentVariablesSubstitutions (data, config) {
+    if (!config || !config.substitutions || !config.substitutions.environment_variables || !config.substitutions.environment_variables.enabled) {
+      return data
+    }
+
+    // allow everything if white_list is not present and substitute environment variables is enabled
+    const whiteListEnvironmentVariables = config.substitutions.environment_variables.white_list || Object.keys(process.env)
+    const objToUpdate = R.pick(whiteListEnvironmentVariables, process.env)
+
+    let modifiedData = data.toString('utf-8')
+    for (let key in objToUpdate) {
+      modifiedData = R.replace(new RegExp('\\${' + key + '}', 'g'), objToUpdate[key], modifiedData)
+    }
+
+    return modifiedData
   }
 
   async loadServices (url, services) {

@@ -1,10 +1,10 @@
 const fs = require('fs')
 
 const R = require('ramda')
-const axios = require('axios')
 
-const { Command, flags } = require('@oclif/command')
+const { flags } = require('@oclif/command')
 
+const Command = require('../base')
 const { getAllData } = require('../utils/get-data')
 
 class DumpCommand extends Command {
@@ -12,19 +12,52 @@ class DumpCommand extends Command {
     const { flags } = this.parse(DumpCommand)
 
     const outputData = await getAllData(flags.url)
+    const data = this.applySubstitutions(outputData, this.cmdConfig)
 
     const file = fs.createWriteStream(flags.file)
     file.write(
       Buffer.from(
-        JSON.stringify(outputData, null, 4)
+        JSON.stringify(data, null, 4)
       )
     )
   }
 
-  async getData (url, route) {
-    const omitKeys = ['created_at', 'updated_at']
-    const response = await axios.get(`${url}/${route}`)
-    return R.map(R.omit(omitKeys), response.data.data)
+  applySubstitutions (data, config) {
+    if (!config || !config.substitutions) {
+      return data
+    }
+
+    const keys = Object.keys(config.substitutions)
+    for (let key of keys) {
+      if (!data[key] || !data[key].length) {
+        continue
+      }
+
+      let currentExceptions = []
+      if (config.exceptions && config.exceptions[key]) {
+        currentExceptions = config.exceptions[key]
+      }
+
+      for (let i = 0; i < data[key].length; i++) {
+        let exceptionFound = false
+        for (let exceptionIndex = 0; exceptionIndex < currentExceptions.length; exceptionIndex++) {
+          const currentException = currentExceptions[exceptionIndex]
+
+          if (data[key][i][currentException.key] && data[key][i][currentException.key] === currentException.value) {
+            exceptionFound = true
+            break
+          }
+        }
+
+        if (exceptionFound) {
+          continue
+        }
+
+        data[key][i] = R.mergeDeepRight(data[key][i], config.substitutions[key])
+      }
+    }
+
+    return data
   }
 }
 

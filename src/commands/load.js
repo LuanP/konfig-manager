@@ -12,7 +12,7 @@ class LoadCommand extends Command {
     const { flags } = this.parse(LoadCommand)
     const fileUnparsedData = LoadCommand.readConfigFile(flags.file)
     const updatedUnparsedData = this.applyEnvironmentVariablesSubstitutions(fileUnparsedData, this.cmdConfig)
-    const currentData = JSON.parse(updatedUnparsedData)
+    const data = JSON.parse(updatedUnparsedData)
 
     await this.loadServices(flags.url, data.services)
     await this.loadRoutes(flags.url, data.routes)

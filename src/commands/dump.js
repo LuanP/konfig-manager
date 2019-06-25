@@ -53,7 +53,27 @@ class DumpCommand extends Command {
           continue
         }
 
-        data[key][i] = R.mergeDeepRight(data[key][i], config.substitutions[key])
+        // get only substitutions that apply to the current object
+        const cleanedSubstitutions = {}
+        for (let substitutionKey in config.substitutions[key]) {
+          const substitutionValue = config.substitutions[key][substitutionKey]
+          if (typeof substitutionValue === 'object' && !Array.isArray(substitutionValue)) {
+            // dictionary object
+            cleanedSubstitutions[substitutionKey] = {}
+
+            for (let childSubstitionKey of Object.keys(substitutionValue)) {
+              if (R.path([substitutionKey, childSubstitionKey], data[key][i]) !== undefined) {
+                cleanedSubstitutions[substitutionKey][childSubstitionKey] = substitutionValue[childSubstitionKey]
+              }
+            }
+          } else {
+            if (R.path([substitutionKey], data[key][i]) !== undefined) {
+              cleanedSubstitutions[substitutionKey] = substitutionValue
+            }
+          }
+        }
+
+        data[key][i] = R.mergeDeepRight(data[key][i], cleanedSubstitutions)
       }
     }
 

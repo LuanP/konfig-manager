@@ -108,7 +108,7 @@ class SyncCommand extends Command {
         const currentFileObj = currentFileCollection[i]
         const currentAdminApiObj = R.find(R.propEq('id', currentFileObj.id))(currentAdminApiCollection)
 
-        if (currentAdminApiObj === undefined || R.equals(currentFileObj, currentAdminApiObj)) {
+        if (currentAdminApiObj === undefined || R.equals(Object.create(currentFileObj), Object.create(currentAdminApiObj))) {
           continue
         }
 

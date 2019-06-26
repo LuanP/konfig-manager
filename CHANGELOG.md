@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2019-06-26
+### Fixed
+- Sync equality check between objects
+
 ## [1.4.0] - 2019-06-26
 ### Added
 - Documentation on how to use with docker multi stage, multiple files and example of a .konfigrc

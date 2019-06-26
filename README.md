@@ -31,6 +31,76 @@ USAGE
 ...
 ```
 <!-- usagestop -->
+
+## Docker
+
+Here's an example of how to use this library with docker multi stage:
+
+```docker
+FROM node:lts-alpine as konfig-manager
+
+RUN npm install -g konfig-manager@1.2.0 --production
+
+FROM kong:1.2-alpine as api-gateway
+
+COPY --from=konfig-manager /usr/local/ /usr/local/
+
+...
+```
+
+## Custom configuration
+
+This library allows you to replace content based on the resource type (`plugins`, `routes`, ...) when dumping and to perform substitutions based on environment variabled when running loading.
+
+Here it follows a `.konfigrc` example:
+
+```json
+{
+  "load": {
+    "substitutions": {
+      "environment_variables": {
+        "enabled": true,
+        "white_list": ["SERVER_PROTOCOL", "SERVER_HOST", "SERVER_PORT"]
+      }
+    }
+  },
+  "dump": {
+    "substitutions": {
+      "plugins": {
+        "config": {
+          "introspection_endpoint": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/introspect",
+          "discovery": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/.well-known/openid-configuration"
+      }
+    },
+      "routes": {
+        "hosts": [
+          "${SERVER_HOST}"
+        ]
+      }
+    },
+    "exceptions": {
+      "routes": [
+        {
+          "key": "name",
+          "value": "do-not-change-this-route"
+        }
+      ]
+    }
+  }
+}
+```
+
+## Load / sync with several files
+
+You can run the command by passing the `--file` several times to merge it.
+
+```shell
+konfig sync --file minimal-konfig.json --file konfig.json
+```
+
+**NOTE:** If duplicated id's are found in a collection, the data from the last file passed will be kept.
+
+
 # Commands
 <!-- commands -->
 * [`konfig dump`](#konfig-dump)

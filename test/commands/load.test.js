@@ -1,6 +1,6 @@
 const { expect, test } = require('@oclif/test')
 
-const LoadCommand = require('../../src/commands/load')
+const reader = require('../../src/utils/file-reader')
 
 const example = {
   'services': [
@@ -117,7 +117,7 @@ const axiosFailureResponse = (data, status) => {
 
 describe('load', () => {
   test
-    .stub(LoadCommand, 'readConfigFile', (f) => { return JSON.stringify(example) })
+    .stub(reader, 'read', (f) => { return JSON.stringify(example) })
     .nock('http://localhost:8001', api => api
       .post('/services', example.services[0])
       .reply(201, axiosResponse(example.services[0], 201))
@@ -139,7 +139,7 @@ describe('load', () => {
     })
 
   test
-    .stub(LoadCommand, 'readConfigFile', (f) => { return JSON.stringify(failureExample) })
+    .stub(reader, 'read', (f) => { return JSON.stringify(failureExample) })
     .nock('http://localhost:8001', api => api
       .post('/services', failureExample.services[0])
       .reply((url, body) => {

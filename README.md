@@ -24,72 +24,12 @@ $ npm install -g konfig-manager
 $ konfig COMMAND
 running command...
 $ konfig (-v|--version|version)
-konfig-manager/1.2.0 darwin-x64 node-v10.15.3
+konfig-manager/1.2.0 darwin-x64 node-v10.16.0
 $ konfig --help [COMMAND]
 USAGE
   $ konfig COMMAND
 ...
 ```
-
-## Docker
-
-Here's an example of how to use this library with docker multi stage:
-
-```docker
-FROM node:lts-alpine as konfig-manager
-
-RUN npm install -g konfig-manager@1.2.0 --production
-
-FROM kong:1.2-alpine as api-gateway
-
-COPY --from=konfig-manager /usr/local/ /usr/local/
-
-...
-```
-
-## Custom configuration
-
-This library allows you to replace content based on the resource type (`plugins`, `routes`, ...) when dumping and to perform substitutions based on environment variabled when running loading.
-
-Here it follows a `.konfigrc` example:
-
-```json
-{
-  "load": {
-    "substitutions": {
-      "environment_variables": {
-        "enabled": true,
-        "white_list": ["SERVER_PROTOCOL", "SERVER_HOST", "SERVER_PORT"]
-      }
-    }
-  },
-  "dump": {
-    "substitutions": {
-      "plugins": {
-        "config": {
-          "introspection_endpoint": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/introspect",
-          "discovery": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/.well-known/openid-configuration"
-      }
-    },
-      "routes": {
-        "hosts": [
-          "${SERVER_HOST}"
-        ]
-      }
-    },
-    "exceptions": {
-      "routes": [
-        {
-          "key": "name",
-          "value": "do-not-change-this-route"
-        }
-      ]
-    }
-  }
-}
-```
-
-
 <!-- usagestop -->
 # Commands
 <!-- commands -->
@@ -97,6 +37,7 @@ Here it follows a `.konfigrc` example:
 * [`konfig flush`](#konfig-flush)
 * [`konfig help [COMMAND]`](#konfig-help-command)
 * [`konfig load`](#konfig-load)
+* [`konfig sync`](#konfig-sync)
 
 ## `konfig dump`
 
@@ -148,7 +89,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.0/src/commands/help.ts)_
 
 ## `konfig load`
 
@@ -167,4 +108,22 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/load.js](https://github.com/LuanP/konfig-manager/blob/v1.2.0/src/commands/load.js)_
+
+## `konfig sync`
+
+Describe the command here
+
+```
+USAGE
+  $ konfig sync
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/sync.js](https://github.com/LuanP/konfig-manager/blob/v1.2.0/src/commands/sync.js)_
 <!-- commandsstop -->

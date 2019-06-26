@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add sync command to perform create, update and delete actions in the Admin API based on the differences found in the files
 - Add possibility of loading from multiple files, performing a union of each collection based on the id
 - Add .konfigrc example in README.md
 - Add Dockerfile example usage in README.md

@@ -7,45 +7,13 @@ const { flags } = require('@oclif/command')
 
 const Command = require('../base')
 
-const mergeData = (dataList) => {
-  const mergedData = dataList[0]
-
-  for (let i = 1; i < dataList.length; i++) {
-    const currentData = dataList[i]
-    for (const collectionKey in currentData) {
-      // collectionKey e.g.: plugins, consumers, services, routes, ...
-      mergedData[collectionKey] = R.unionWith(
-        R.eqBy(R.prop('id')),
-        mergedData[collectionKey],
-        currentData[collectionKey]
-      )
-    }
-  }
-
-  return mergedData
-}
+const parser = require('../utils/parse-files')
 
 class LoadCommand extends Command {
   async run () {
     const { flags } = this.parse(LoadCommand)
 
-    let unparsedData
-    if (typeof flags.file === 'string') {
-      const unparsedBufferData = LoadCommand.readConfigFile(flags.file)
-      unparsedData = unparsedBufferData.toString('utf-8')
-    } else {
-      const dataList = []
-      for (const filepath of flags.file) {
-        const unparsedBufferData = LoadCommand.readConfigFile(filepath)
-        dataList.push(JSON.parse(unparsedBufferData.toString('utf-8')))
-      }
-
-      const mergedData = mergeData(dataList)
-      unparsedData = JSON.stringify(mergedData)
-    }
-
-    const updatedUnparsedData = this.applyEnvironmentVariablesSubstitutions(unparsedData, this.cmdConfig)
-    const data = JSON.parse(updatedUnparsedData)
+    const data = parser.parse(flags.file, this.cmdConfig)
 
     await this.loadServices(flags.url, data.services)
     await this.loadRoutes(flags.url, data.routes)
@@ -59,23 +27,6 @@ class LoadCommand extends Command {
     }
 
     this.log('All loaded. You\'re ready to go!')
-  }
-
-  applyEnvironmentVariablesSubstitutions (data, config) {
-    if (!config || !config.substitutions || !config.substitutions.environment_variables || !config.substitutions.environment_variables.enabled) {
-      return data
-    }
-
-    // allow everything if white_list is not present and substitute environment variables is enabled
-    const whiteListEnvironmentVariables = config.substitutions.environment_variables.white_list || Object.keys(process.env)
-    const objToUpdate = R.pick(whiteListEnvironmentVariables, process.env)
-
-    let modifiedData = data
-    for (const key in objToUpdate) {
-      modifiedData = R.replace(new RegExp('\\${' + key + '}', 'g'), objToUpdate[key], modifiedData)
-    }
-
-    return modifiedData
   }
 
   async loadServices (url, services) {

@@ -28,7 +28,7 @@ class DumpCommand extends Command {
     }
 
     const keys = Object.keys(config.substitutions)
-    for (let key of keys) {
+    for (const key of keys) {
       if (!data[key] || !data[key].length) {
         continue
       }
@@ -55,13 +55,13 @@ class DumpCommand extends Command {
 
         // get only substitutions that apply to the current object
         const cleanedSubstitutions = {}
-        for (let substitutionKey in config.substitutions[key]) {
+        for (const substitutionKey in config.substitutions[key]) {
           const substitutionValue = config.substitutions[key][substitutionKey]
           if (typeof substitutionValue === 'object' && !Array.isArray(substitutionValue)) {
             // dictionary object
             cleanedSubstitutions[substitutionKey] = {}
 
-            for (let childSubstitionKey of Object.keys(substitutionValue)) {
+            for (const childSubstitionKey of Object.keys(substitutionValue)) {
               if (R.path([substitutionKey, childSubstitionKey], data[key][i]) !== undefined) {
                 cleanedSubstitutions[substitutionKey][childSubstitionKey] = substitutionValue[childSubstitionKey]
               }

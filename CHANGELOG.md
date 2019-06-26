@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add possibility of loading from multiple files, performing a union of each collection based on the id
 - Add .konfigrc example in README.md
 - Add Dockerfile example usage in README.md
 - Add data substitutions when dumping/loading based on a configuration file (.konfigrc)

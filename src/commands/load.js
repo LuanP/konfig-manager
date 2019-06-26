@@ -7,11 +7,44 @@ const { flags } = require('@oclif/command')
 
 const Command = require('../base')
 
+const mergeData = (dataList) => {
+  const mergedData = dataList[0]
+
+  for (let i = 1; i < dataList.length; i++) {
+    const currentData = dataList[i]
+    for (const collectionKey in currentData) {
+      // collectionKey e.g.: plugins, consumers, services, routes, ...
+      mergedData[collectionKey] = R.unionWith(
+        R.eqBy(R.prop('id')),
+        mergedData[collectionKey],
+        currentData[collectionKey]
+      )
+    }
+  }
+
+  return mergedData
+}
+
 class LoadCommand extends Command {
   async run () {
     const { flags } = this.parse(LoadCommand)
-    const fileUnparsedData = LoadCommand.readConfigFile(flags.file)
-    const updatedUnparsedData = this.applyEnvironmentVariablesSubstitutions(fileUnparsedData, this.cmdConfig)
+
+    let unparsedData
+    if (typeof flags.file === 'string') {
+      const unparsedBufferData = LoadCommand.readConfigFile(flags.file)
+      unparsedData = unparsedBufferData.toString('utf-8')
+    } else {
+      const dataList = []
+      for (const filepath of flags.file) {
+        const unparsedBufferData = LoadCommand.readConfigFile(filepath)
+        dataList.push(JSON.parse(unparsedBufferData.toString('utf-8')))
+      }
+
+      const mergedData = mergeData(dataList)
+      unparsedData = JSON.stringify(mergedData)
+    }
+
+    const updatedUnparsedData = this.applyEnvironmentVariablesSubstitutions(unparsedData, this.cmdConfig)
     const data = JSON.parse(updatedUnparsedData)
 
     await this.loadServices(flags.url, data.services)
@@ -37,8 +70,8 @@ class LoadCommand extends Command {
     const whiteListEnvironmentVariables = config.substitutions.environment_variables.white_list || Object.keys(process.env)
     const objToUpdate = R.pick(whiteListEnvironmentVariables, process.env)
 
-    let modifiedData = data.toString('utf-8')
-    for (let key in objToUpdate) {
+    let modifiedData = data
+    for (const key in objToUpdate) {
       modifiedData = R.replace(new RegExp('\\${' + key + '}', 'g'), objToUpdate[key], modifiedData)
     }
 
@@ -111,7 +144,7 @@ It gets data from a file and loads in Kong Admin API endpoints.
 `
 
 LoadCommand.flags = {
-  file: flags.string({ default: 'konfig.json', description: 'name of file to be loaded' }),
+  file: flags.string({ default: 'konfig.json', description: 'name of file to be loaded', multiple: true }),
   url: flags.string({ default: 'http://localhost:8001', description: 'URL of the Kong Admin API' })
 }
 

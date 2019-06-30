@@ -1,8 +1,10 @@
 const fs = require('fs')
 
+const R = require('ramda')
 const { expect, test } = require('@oclif/test')
-
 const sinon = require('sinon')
+
+const Command = require('../../src/base')
 
 const example = {
   'services': [
@@ -141,6 +143,24 @@ const stubbedCreateWriteStream = {
   write: sinon.stub()
 }
 
+const stubbedConfig = {
+  'substitutions': {
+    'routes': {
+      'hosts': [
+        '${SERVER_HOST}'
+      ]
+    }
+  },
+  'exceptions': {
+    'routes': [
+      {
+        'key': 'name',
+        'value': 'do-not-change-this-route'
+      }
+    ]
+  }
+}
+
 describe('dump', () => {
   test
     .stub(fs, 'createWriteStream', sinon.stub().returns(stubbedCreateWriteStream))
@@ -161,8 +181,44 @@ describe('dump', () => {
       .reply(200, axiosResponse(example.snis, 200))
     )
     .command(['dump'])
-    .it('runs dump successfully', (ctx) => {
+    .it('runs dump without substitutions successfully', (ctx) => {
       expect(fs.createWriteStream.called).to.equal(true)
       expect(stubbedCreateWriteStream.write.called).to.equal(true)
+    })
+
+  test
+    .stub(fs, 'createWriteStream', sinon.stub().returns(stubbedCreateWriteStream))
+    .do(() => {
+      sinon.stub(Command.prototype, 'cmdConfig').value(stubbedConfig)
+      sinon.spy(Buffer, 'from')
+    })
+    .nock('http://localhost:8001', api => api
+      .get('/plugins')
+      .reply(200, axiosResponse(example.plugins, 200))
+      .get('/consumers')
+      .reply(200, axiosResponse(example.consumers, 200))
+      .get('/services')
+      .reply(200, axiosResponse(example.services, 200))
+      .get('/routes')
+      .reply(200, axiosResponse(example.routes, 200))
+      .get('/upstreams')
+      .reply(200, axiosResponse(example.upstreams, 200))
+      .get('/certificates')
+      .reply(200, axiosResponse(example.certificates, 200))
+      .get('/snis')
+      .reply(200, axiosResponse(example.snis, 200))
+    )
+    .command(['dump'])
+    .it('runs dump with substitutions successfully', (ctx) => {
+      expect(fs.createWriteStream.called).to.equal(true)
+      expect(stubbedCreateWriteStream.write.called).to.equal(true)
+
+      const clonedExample = R.clone(example)
+      clonedExample.routes[0].hosts = ['${SERVER_HOST}']
+      expect(
+        Buffer.from.lastCall.calledWith(
+          JSON.stringify(Object.create(clonedExample), null, 4)
+        )
+      )
     })
 })

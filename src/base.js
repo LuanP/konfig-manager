@@ -14,4 +14,6 @@ class CustomCommand extends Command {
   }
 }
 
+CustomCommand.prototype.cmdConfig = null
+
 module.exports = CustomCommand

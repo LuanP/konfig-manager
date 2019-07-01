@@ -105,10 +105,12 @@ class SyncCommand extends Command {
       )
 
       for (let i = 0; i < currentFileCollection.length; i++) {
+        const omitKeys = ['created_at', 'updated_at']
+
         const currentFileObj = currentFileCollection[i]
         const currentAdminApiObj = R.find(R.propEq('id', currentFileObj.id))(currentAdminApiCollection)
 
-        if (currentAdminApiObj === undefined || R.equals(Object.create(currentFileObj), Object.create(currentAdminApiObj))) {
+        if (currentAdminApiObj === undefined || R.equals(R.omit(omitKeys)(currentFileObj), currentAdminApiObj)) {
           continue
         }
 

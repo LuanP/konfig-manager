@@ -1,6 +1,9 @@
+const R = require('ramda')
 const { expect, test } = require('@oclif/test')
+const sinon = require('sinon')
 
 const reader = require('../../src/utils/file-reader')
+const Command = require('../../src/base')
 
 const example = {
   'services': [
@@ -27,7 +30,7 @@ const example = {
       'name': 'my-route',
       'protocols': ['http', 'https'],
       'methods': ['GET', 'POST'],
-      'hosts': ['example.com', 'foo.test'],
+      'hosts': ['example.com'],
       'paths': ['/foo', '/bar'],
       'https_redirect_status_code': 426,
       'regex_priority': 0,
@@ -99,6 +102,18 @@ const invalidSchemaResponse = {
   'code': 2
 }
 
+const stubbedConfig = {
+  'substitutions': {
+    'environment_variables': {
+      'enabled': true,
+      'white_list': ['SERVER_PROTOCOL', 'SERVER_HOST', 'SERVER_PORT']
+    }
+  }
+}
+
+const clonedExample = R.clone(example)
+clonedExample.routes[0].hosts = ['${SERVER_HOST}']
+
 const axiosResponse = (data, status) => {
   return {
     data: data,
@@ -115,7 +130,13 @@ const axiosFailureResponse = (data, status) => {
   }
 }
 
+const sandbox = sinon.createSandbox()
+
 describe('load', () => {
+  afterEach(() => {
+    sandbox.restore()
+  })
+
   test
     .stub(reader, 'read', (f) => { return JSON.stringify(example) })
     .nock('http://localhost:8001', api => api
@@ -149,6 +170,33 @@ describe('load', () => {
     .stdout()
     .command(['load'])
     .it('runs load with only services and invalid schema', (ctx) => {
+      expect(ctx.stdout).to.contain('All loaded. You\'re ready to go!')
+    })
+
+  test
+    .env({ SERVER_HOST: 'example.com' })
+    .stub(reader, 'read', (f) => { return JSON.stringify(clonedExample) })
+    .do(() => {
+      sandbox.stub(Command.prototype, 'cmdConfig').value(stubbedConfig)
+    })
+    .nock('http://localhost:8001', api => api
+      .post('/services', example.services[0])
+      .reply(201, axiosResponse(example.services[0], 201))
+      .post('/routes', example.routes[0])
+      .reply(201, axiosResponse(example.routes[0], 201))
+      .post('/plugins', example.plugins[0])
+      .reply(201, axiosResponse(example.plugins[0], 201))
+      .post('/consumers', example.consumers[0])
+      .reply(201, axiosResponse(example.consumers[0], 201))
+      .post('/certificates', example.certificates[0])
+      .reply(201, axiosResponse(example.certificates[0], 201))
+      .post('/snis', example.snis[0])
+      .reply(201, axiosResponse(example.snis[0], 201))
+    )
+    .stdout()
+    .command(['load'])
+    .it('runs load with env var substitution successfully', (ctx) => {
+      expect(process.env.SERVER_HOST).to.equal('example.com')
       expect(ctx.stdout).to.contain('All loaded. You\'re ready to go!')
     })
 })

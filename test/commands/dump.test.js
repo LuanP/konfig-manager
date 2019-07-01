@@ -139,8 +139,10 @@ const axiosResponse = (data, status) => {
   }
 }
 
+const sandbox = sinon.createSandbox()
+
 const stubbedCreateWriteStream = {
-  write: sinon.stub()
+  write: sandbox.stub()
 }
 
 const stubbedConfig = {
@@ -162,8 +164,12 @@ const stubbedConfig = {
 }
 
 describe('dump', () => {
+  afterEach(() => {
+    sandbox.restore()
+  })
+
   test
-    .stub(fs, 'createWriteStream', sinon.stub().returns(stubbedCreateWriteStream))
+    .stub(fs, 'createWriteStream', sandbox.stub().returns(stubbedCreateWriteStream))
     .nock('http://localhost:8001', api => api
       .get('/plugins')
       .reply(200, axiosResponse(example.plugins, 200))
@@ -187,10 +193,10 @@ describe('dump', () => {
     })
 
   test
-    .stub(fs, 'createWriteStream', sinon.stub().returns(stubbedCreateWriteStream))
+    .stub(fs, 'createWriteStream', sandbox.stub().returns(stubbedCreateWriteStream))
     .do(() => {
-      sinon.stub(Command.prototype, 'cmdConfig').value(stubbedConfig)
-      sinon.spy(Buffer, 'from')
+      sandbox.stub(Command.prototype, 'cmdConfig').value(stubbedConfig)
+      sandbox.spy(Buffer, 'from')
     })
     .nock('http://localhost:8001', api => api
       .get('/plugins')

@@ -41,7 +41,11 @@
   ],
   "homepage": "https://github.com/LuanP/konfig-manager",
   "keywords": [
-    "oclif"
+    "kong",
+    "kong config manager",
+    "kong configuration manager",
+    "kong configuration",
+    "kong config"
   ],
   "license": "MIT",
   "main": "src/index.js",

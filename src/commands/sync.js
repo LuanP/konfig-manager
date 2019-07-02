@@ -59,16 +59,27 @@ class SyncCommand extends Command {
 
   async addDifferenceBetween (url, fileData, adminApiData) {
     // adds what's is in the file data and was not found in the admin API responses
-    const requests = []
-    for (const collectionKey in fileData) {
+    // order should be respected when adding to avoid constraint violations
+    const listOrder = ['services', 'routes', 'plugins', 'consumers', 'certificates', 'snis', 'consumersJWTs']
+    for (const collectionKey of listOrder) {
+      const requests = []
       const currentFileCollection = fileData[collectionKey]
       const currentAdminApiCollection = adminApiData[collectionKey]
 
-      const difference = R.differenceWith(
-        R.eqBy(R.prop('id')),
-        currentFileCollection,
-        currentAdminApiCollection
-      )
+      if (!currentAdminApiCollection && (!Array.isArray(currentFileCollection) || !currentFileCollection.length)) {
+        continue
+      }
+
+      let difference
+      if (!currentAdminApiCollection) {
+        difference = currentFileCollection
+      } else {
+        difference = R.differenceWith(
+          R.eqBy(R.prop('id')),
+          currentFileCollection,
+          currentAdminApiCollection
+        )
+      }
 
       R.map(
         (objToAdd) => {
@@ -84,9 +95,10 @@ class SyncCommand extends Command {
         this.log('[ADDING]', collectionKey)
         this.log(JSON.stringify(difference, null, 2))
       }
-    }
 
-    return Promise.all(requests)
+      // finish all the requests before going to the next collection
+      await Promise.all(requests)
+    }
   }
 
   async updateDifferenceBetween (url, fileData, adminApiData) {
@@ -97,6 +109,10 @@ class SyncCommand extends Command {
     for (const collectionKey in fileData) {
       const currentFileCollection = fileData[collectionKey]
       const currentAdminApiCollection = adminApiData[collectionKey]
+
+      if (!currentAdminApiCollection) {
+        continue
+      }
 
       const difference = R.differenceWith(
         R.eqBy(R.prop('id')),

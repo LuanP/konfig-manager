@@ -1,7 +1,7 @@
 {
   "name": "konfig-manager",
   "description": "Kong API Gateway Config Manager",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "author": "Luan Pablo Fabiano",
   "bin": {
     "konfig": "./bin/run"

@@ -114,6 +114,18 @@ const stubbedConfig = {
 const clonedExample = R.clone(example)
 clonedExample.routes[0].hosts = ['${SERVER_HOST}']
 
+// services, routes, plugins, consumers, certificates, snis
+const clonedFirstCallExample = {
+  services: [],
+  routes: R.clone(clonedExample.routes),
+  plugins: [],
+  consumers: [],
+  certificates: [],
+  snis: []
+}
+const clonedSecondCallExample = R.clone(clonedExample)
+clonedSecondCallExample.routes = []
+
 const axiosResponse = (data, status) => {
   return {
     data: data,
@@ -196,6 +208,36 @@ describe('load', () => {
     .stdout()
     .command(['load'])
     .it('runs load with env var substitution successfully', (ctx) => {
+      expect(process.env.SERVER_HOST).to.equal('example.com')
+      expect(ctx.stdout).to.contain('All loaded. You\'re ready to go!')
+    })
+
+  test
+    .env({ SERVER_HOST: 'example.com' })
+    .stub(reader, 'read', sandbox.stub()
+      .onFirstCall().returns(JSON.stringify(clonedFirstCallExample))
+      .onSecondCall().returns(JSON.stringify(clonedSecondCallExample))
+    )
+    .do(() => {
+      sandbox.stub(Command.prototype, 'cmdConfig').value(stubbedConfig)
+    })
+    .nock('http://localhost:8001', api => api
+      .post('/services', example.services[0])
+      .reply(201, axiosResponse(example.services[0], 201))
+      .post('/routes', example.routes[0])
+      .reply(201, axiosResponse(example.routes[0], 201))
+      .post('/plugins', example.plugins[0])
+      .reply(201, axiosResponse(example.plugins[0], 201))
+      .post('/consumers', example.consumers[0])
+      .reply(201, axiosResponse(example.consumers[0], 201))
+      .post('/certificates', example.certificates[0])
+      .reply(201, axiosResponse(example.certificates[0], 201))
+      .post('/snis', example.snis[0])
+      .reply(201, axiosResponse(example.snis[0], 201))
+    )
+    .stdout()
+    .command(['load', '--file=minimal-konfig.json', '--file=konfig.json'])
+    .it('runs load merging two config files successfully', (ctx) => {
       expect(process.env.SERVER_HOST).to.equal('example.com')
       expect(ctx.stdout).to.contain('All loaded. You\'re ready to go!')
     })

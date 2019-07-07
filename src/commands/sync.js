@@ -27,10 +27,16 @@ class SyncCommand extends Command {
   async deleteDifferenceBetween (url, fileData, adminApiData) {
     // deletes what's present in the responses from admin API
     // and it's not contained in the file data running on this sync
-    const requests = []
+    // order should be respected when deleting to avoid constraint violations
+    const listOrder = ['snis', 'certificates', 'plugins', 'upstreams', 'consumers', 'routes', 'services']
     for (const collectionKey in adminApiData) {
+      const requests = []
       const currentFileCollection = fileData[collectionKey]
       const currentAdminApiCollection = adminApiData[collectionKey]
+
+      if (!currentAdminApiCollection && (!Array.isArray(currentFileCollection) || !currentFileCollection.length)) {
+        continue
+      }
 
       const difference = R.differenceWith(
         R.eqBy(R.prop('id')),
@@ -52,9 +58,10 @@ class SyncCommand extends Command {
         this.log('[DELETING]', collectionKey)
         this.log(JSON.stringify(difference, null, 2))
       }
-    }
 
-    return Promise.all(requests)
+      // finish all the requests before going to the next collection
+      await Promise.all(requests)
+    }
   }
 
   async addDifferenceBetween (url, fileData, adminApiData) {

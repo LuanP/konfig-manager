@@ -39,9 +39,9 @@ Here's an example of how to use this library with docker multi stage:
 ```docker
 FROM node:lts-alpine as konfig-manager
 
-RUN npm install -g konfig-manager@1.4.3 --production
+RUN npm install -g konfig-manager@1.4.4 --production
 
-FROM kong:1.2-alpine as api-gateway
+FROM kong:1.2.1-alpine as api-gateway
 
 COPY --from=konfig-manager /usr/local/ /usr/local/
 

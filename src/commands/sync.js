@@ -29,7 +29,7 @@ class SyncCommand extends Command {
     // and it's not contained in the file data running on this sync
     // order should be respected when deleting to avoid constraint violations
     const listOrder = ['snis', 'certificates', 'plugins', 'upstreams', 'consumers', 'routes', 'services']
-    for (const collectionKey in listOrder) {
+    for (const collectionKey of listOrder) {
       const requests = []
       const currentFileCollection = fileData[collectionKey]
       const currentAdminApiCollection = adminApiData[collectionKey]

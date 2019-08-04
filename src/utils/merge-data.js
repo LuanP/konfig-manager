@@ -9,11 +9,9 @@ Data.merge = (dataList) => {
     const currentData = dataList[i]
     for (const collectionKey in currentData) {
       // collectionKey e.g.: plugins, consumers, services, routes, ...
-      mergedData[collectionKey] = R.unionWith(
-        R.eqBy(R.prop('id')),
-        currentData[collectionKey],
-        mergedData[collectionKey]
-      )
+      const currentIds = R.map(obj => obj.id, currentData[collectionKey])
+      const filteredData = R.filter(obj => !currentIds.includes(obj.id), mergedData[collectionKey])
+      mergedData[collectionKey] = R.concat(filteredData, currentData[collectionKey])
     }
   }
 

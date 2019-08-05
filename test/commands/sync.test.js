@@ -5,6 +5,7 @@ const { expect, test } = require('@oclif/test')
 const sinon = require('sinon')
 
 const reader = require('../../src/utils/file-reader')
+const dataMerger = require('../../src/utils/merge-data')
 const Command = require('../../src/base')
 
 const example = {
@@ -271,5 +272,21 @@ describe('sync', () => {
     .command(['sync'])
     .it('runs sync and updates plugin with the file info successfully', (ctx) => {
       expect(ctx.stdout).to.contain('Sync completed.')
+    })
+
+  test
+    .it('merge data', () => {
+      const exampleConfig = {
+        plugins: [
+          { id: '7fca84d6-7d37-4a74-a7b0-93e576089a41', config: true }
+        ]
+      }
+      const exampleConfig2 = {
+        plugins: [
+          { id: '7fca84d6-7d37-4a74-a7b0-93e576089a41', config: false }
+        ]
+      }
+      const result = dataMerger.merge([exampleConfig, exampleConfig2])
+      expect(result).to.deep.equal(exampleConfig2)
     })
 })

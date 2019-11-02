@@ -60,7 +60,21 @@ Here it follows a `.konfigrc` example:
     "substitutions": {
       "environment_variables": {
         "enabled": true,
-        "white_list": ["SERVER_PROTOCOL", "SERVER_HOST", "SERVER_PORT"]
+        "white_list": ["SERVER_PROTOCOL", "SERVER_HOST", "SERVER_PORT"],
+        "types": {
+          "TRUSTED_ORIGINS": "list"
+        }
+      }
+    }
+  },
+  "sync": {
+    "substitutions": {
+      "environment_variables": {
+        "enabled": true,
+        "white_list": ["SERVER_PROTOCOL", "SERVER_HOST", "SERVER_PORT", "TRUSTED_ORIGINS"],
+        "types": {
+          "TRUSTED_ORIGINS": "list"
+        }
       }
     }
   },
@@ -69,7 +83,8 @@ Here it follows a `.konfigrc` example:
       "plugins": {
         "config": {
           "introspection_endpoint": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/introspect",
-          "discovery": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/.well-known/openid-configuration"
+          "discovery": "${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}/openid/.well-known/openid-configuration",
+          "trusted_origins": "${TRUSTED_ORIGINS}"
       }
     },
       "routes": {

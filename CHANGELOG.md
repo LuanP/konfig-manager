@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2019-11-02
+### Added
+- Type definition to environment variables (boolean/bool and array/list) in sync/load commands
+
 ## [1.4.4] - 2019-07-08
 ### Added
 - Test for merging files

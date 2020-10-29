@@ -27,7 +27,7 @@
     "nyc": "^15",
     "sinon": "^9.0.0",
     "snazzy": "^8.0.0",
-    "standard": "^14.0.0"
+    "standard": "^15.0.1"
   },
   "engines": {
     "node": "12.13.0",

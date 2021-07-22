@@ -21,7 +21,7 @@
     "babel-eslint": "^10.0.1",
     "chai": "^4",
     "coveralls": "^3.0.4",
-    "globby": "^11",
+    "globby": "^12",
     "mocha": "^8",
     "nock": "^13.0.2",
     "nyc": "^15",

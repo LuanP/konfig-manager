@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
-    "@oclif/test": "^1",
+    "@oclif/test": "^2",
     "babel-eslint": "^10.0.1",
     "chai": "^4",
     "coveralls": "^3.0.4",

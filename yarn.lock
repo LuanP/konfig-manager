@@ -2579,11 +2579,6 @@ lodash.get@^4.4.2:
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
 
-lodash.set@^4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
-  integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
-
 lodash.truncate@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
@@ -2769,13 +2764,13 @@ nise@^5.1.0:
     path-to-regexp "^1.7.0"
 
 nock@^13.0.0, nock@^13.0.2:
-  version "13.2.2"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-13.2.2.tgz#29a6942250278209c2b3e7a38310f703581b21fa"
-  integrity sha512-PcBHuvl9i6zfaJ50A7LS55oU+nFLv8htXIhffJO+FxyfibdZ4jEvd9kTuvkrJireBFIGMZ+oUIRpMK5gU9h//g==
+  version "13.2.6"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-13.2.6.tgz#35e419cd9d385ffa67e59523d9699e41b29e1a03"
+  integrity sha512-GbyeSwSEP0FYouzETZ0l/XNm5tNcDNcXJKw3LCAb+mx8bZSwg1wEEvdL0FAyg5TkBJYiWSCtw6ag4XfmBy60FA==
   dependencies:
     debug "^4.1.0"
     json-stringify-safe "^5.0.1"
-    lodash.set "^4.3.2"
+    lodash "^4.17.21"
     propagate "^2.0.0"
 
 node-preload@^0.2.1:

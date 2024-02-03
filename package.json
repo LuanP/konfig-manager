@@ -8,7 +8,7 @@
   },
   "bugs": "https://github.com/LuanP/konfig-manager/issues",
   "dependencies": {
-    "@oclif/command": "^1",
+    "@oclif/command": "^1.8.36",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^5",
     "axios": "^0.27.2",

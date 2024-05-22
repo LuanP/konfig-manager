@@ -9,7 +9,7 @@
   "bugs": "https://github.com/LuanP/konfig-manager/issues",
   "dependencies": {
     "@oclif/command": "^1",
-    "@oclif/config": "^1",
+    "@oclif/config": "^1.18.17",
     "@oclif/plugin-help": "^5",
     "axios": "^0.27.2",
     "ramda": "^0.28.0",
